@@ -725,8 +725,10 @@ Given(/^there are (\d+) remaining broadcasts$/) do |number|
   expect(page).to have_text("#{number} results")
 end
 
-When(/^I choose "([^"]*)" from the list of TV stations$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+When(/^I choose "([^"]*)" from the list of TV stations$/) do |title|
+  find('.dropdown.button', text: 'Station').click
+  expect(page).to have_css('.item', text: title)
+  find('.item', text: title).click
 end
 
 Then(/^the displayed broadcast is either "([^"]*)" or "([^"]*)"$/) do |arg1, arg2|
@@ -737,10 +739,23 @@ Then(/^the displayed broadcast is either "([^"]*)" or "([^"]*)"$/) do |arg1, arg
 end
 
 When(/^I filter for radio broadcasts$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  find('.dropdown.button', text: 'Medium').click
+  expect(page).to have_css('.item', text: 'Radio')
+  find('.item', text: 'Radio').click
 end
 
-Then(/^the only station to choose from is "([^"]*)"$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^the only station to choose from is "([^"]*)"$/) do |station|
+  find('.dropdown.button', text: 'Station').click
+  expect(page).to have_css('.item', text: station)
+  expect(page).to have_css('.item', count: 1)
 end
 
+Then(/^there are no stations to choose from$/) do
+  find('.dropdown.button', text: 'Station').click
+  expect(page).to have_css('.item', count: 0)
+end
+
+When(/^I filter for online broadcasts$/) do
+  find('.dropdown.button', text: 'Medium').click
+  expect(page).to have_css('.item', text: 'Online')
+end
